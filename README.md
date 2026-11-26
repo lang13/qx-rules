@@ -9,7 +9,7 @@
 | 文件 | 用途 |
 |---|---|
 | `fanqie.list` | 分流列表（78 条域名 / IP 级拦截，不需要证书） |
-| `fanqie.rewrite.conf` | 重写规则（12 条 URL 路径级拦截，必须配合 MITM） |
+| `fanqie.rewrite.conf` | 重写规则（16 条 URL 路径级拦截，必须配合 MITM） |
 | `fanqie-qx.conf` | 三段合一的总览版，供手动粘贴进主配置文件，**不能直接作为引用资源** |
 
 ### 用法一：引用（推荐）
@@ -39,8 +39,19 @@ https://raw.githubusercontent.com/lang13/qx-rules/main/fanqie.rewrite.conf
 重写规则依赖以下域名解密，需在 QX 的「MitM」页手动添加，并确认证书已信任：
 
 ```
-*.pangolin-sdk-toutiao.com, *.pstatp.com, *.pglstatp-toutiao.com, *.snssdk.com, *.byteimg.com, *.ixigua.com, *.fqnovelvod.com, *.qznovelvod.com, gurd.snssdk.com
+*.pangolin-sdk-toutiao.com, *.pstatp.com, *.pglstatp-toutiao.com, *.snssdk.com, *.zijieapi.com, *.byteimg.com, *.ixigua.com, *.fqnovelvod.com, *.qznovelvod.com, gurd.snssdk.com
 ```
+
+`*.zijieapi.com` 不能漏：阅读中途弹出的 6 秒插页广告走 `ad.zijieapi.com/api/ad/v1/banner/`，该域名不在 MITM 名单里时，对应的路径重写规则一条都不会触发。
+
+### 关于阅读中途的 6 秒插页广告
+
+番茄 iOS 的阅读页广告不是普通广告位，而是「阅读流 SDK 在翻页时按概率把整页广告卡片插进正文分页序列」（详见 [aixi134/fanqie-loon-adblock](https://github.com/aixi134/fanqie-loon-adblock) 的 IPA 逆向分析）。因此：
+
+- 广告物料接口是 `ad.zijieapi.com/api/ad/v1/banner|patch|inspire|recall_ads`，本仓库按路径拦截。
+- **不要整段屏蔽 `ad.zijieapi.com`**，否则「看视频免广告」「听书领时长」这类官方激励任务会一起失效。
+- 拦掉物料后，SDK 可能降级到 `defaultAd` 占位页——屏幕上仍可能出现一页占位内容，这是服务端兜底逻辑，网络层无法消除。
+- 想彻底干净只有两条路：改运行时 hook（需越狱）、或走官方免广告（会员 / 本地导入书）。
 
 ### 注意事项
 

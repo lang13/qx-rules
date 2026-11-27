@@ -59,6 +59,35 @@ https://raw.githubusercontent.com/lang13/qx-rules/main/fanqie.rewrite.conf
 - 末尾的直连兜底（`fqnovel.com` / `snssdk.com` / `zijieapi.com` / `ixigua.com` / `pstatp.com`）不要删，删了正文、封面图、听书会被一起拦掉。
 - 修改后需重连 QX 才生效。
 
+## 微信 / 小程序 去广告
+
+规则来源：[uefibin/shadowrocket-rules](https://github.com/uefibin/shadowrocket-rules)（`AdBlock_Live.conf`，2026-11-23 实测版）中的微信小程序段，已由小火箭语法转写为 Quantumult X 语法。
+
+| 文件 | 用途 |
+|---|---|
+| `applet.list` | 分流（5 条域名级拦截，不需要证书） |
+| `applet.rewrite.conf` | 重写（3 条：广告素材图 1px 替换 + 上报接口） |
+| `applet-qx.conf` | 三段合一总览版，供手动粘贴 |
+
+引用地址（QX「分流」「重写」页分别添加）：
+
+```
+https://raw.githubusercontent.com/lang13/qx-rules/main/applet.list
+https://raw.githubusercontent.com/lang13/qx-rules/main/applet.rewrite.conf
+```
+
+MITM 只需这两个子域，**不要**写 `*.qq.com`：
+
+```
+*.wxs.qq.com, mp.weixin.qq.com
+```
+
+### 小程序 5 秒开屏为什么拦不掉
+
+微信小程序的启动封面广告壳子走微信自有加密通道（MMTLS），请求不落在普通 HTTPS 上，代理层看不到 URL，域名与路径规则均无效，MITM 也解不开。这不是规则没写好，是协议层绕过。
+
+要彻底关闭，走官方设置：微信 → 我 → 设置 → 未成年人模式，并把该小程序权限设为「全部」。
+
 ## 免责声明
 
 规则仅用于个人网络调试与学习研究。使用前请自行评估风险，遵守相关服务条款。

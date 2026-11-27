@@ -1,0 +1,13 @@
+# 微信 / 小程序 去广告 —— 分流列表（Quantumult X 引用专用）
+# 来源：uefibin/shadowrocket-rules（AdBlock_Live.conf，2026-11-23 实测版）中的微信小程序段
+# 纯域名级拦截，不需要 MITM、不需要证书
+# 注意：小程序 5 秒开屏封面广告走微信 MMTLS 加密协议，代理层（含 QX）无法消除
+
+# 腾讯优量汇 / 广点通（微信小程序流量主广告的主要投放域）
+host-suffix, gdt.qq.com, reject
+host-suffix, ugdtimg.com, reject
+host, qzs.gdtimg.com, reject
+
+# 小程序广告上报与监控（拦掉不影响功能，只是少上报）
+host, report-online.sh.wxgateway.com, reject
+host, szreport.weixin.qq.com, reject
